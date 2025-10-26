@@ -41,7 +41,7 @@ services:
     container_name: vision_worker
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - API_BASE_URL=http://vision_api:8080/api
+      - API_BASE_URL=http://localhost:8080/api
       - LOG_PATH=/data/users-processed.log
     volumes:
       - worker_data:/data

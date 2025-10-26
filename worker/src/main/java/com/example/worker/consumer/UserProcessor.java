@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -60,6 +61,16 @@ public class UserProcessor {
         );
       }
       log.info("Gravou processamento no arquivo {} para id {}", logPath, id);
+
+      var body = Map.of("status", "PROCESSED", "processedName", processed);
+      http.put()
+              .uri("/users/{id}/status", id)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(body)
+              .retrieve()
+              .toBodilessEntity();
+
+      log.info("Atualizou status do usuário {} para PROCESSED via API", id);
 
     } catch (Exception e) {
       log.error("Erro ao processar mensagem Kafka", e);
