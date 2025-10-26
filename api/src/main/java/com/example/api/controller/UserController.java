@@ -1,9 +1,8 @@
 package com.example.api.controller;
 
 import com.example.api.controller.request.UserCreateRequest;
-import com.example.api.controller.request.UserStatusUpdateRequest;
 import com.example.api.controller.request.UserUpdateRequest;
-import com.example.api.domain.UserStatus;
+import com.example.api.domain.User;
 import com.example.api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +19,19 @@ public class UserController {
   public UserController(UserService service) { this.service = service; }
 
   @PostMapping
-  public ResponseEntity<UserStatus> create(@Valid @RequestBody UserCreateRequest req){
+  public ResponseEntity<User> create(@Valid @RequestBody UserCreateRequest req){
     var u = service.createAndPublish(req.name(), req.email());
     return ResponseEntity.created(URI.create("/api/users/" + u.getId())).body(u);
   }
 
   @GetMapping("/{id}")
-  public UserStatus get(@PathVariable("id") UUID id){
+  public User get(@PathVariable("id") UUID id){
     return service.find(id);
   }
 
   @PutMapping("/{id}")
-  public UserStatus update(@PathVariable("id") UUID id,
-                           @RequestBody UserUpdateRequest req){
+  public User update(@PathVariable("id") UUID id,
+                     @RequestBody UserUpdateRequest req){
     return service.update(id, req.name(), req.email());
   }
 
@@ -40,11 +39,5 @@ public class UserController {
   public ResponseEntity<Void> delete(@PathVariable("id") UUID id){
     service.delete(id);
     return ResponseEntity.noContent().build();
-  }
-
-  @PutMapping("/{id}/status")
-  public UserStatus updateStatus(@PathVariable("id") UUID id,
-                                 @Valid @RequestBody UserStatusUpdateRequest req){
-    return service.updateStatus(id, req.status(), req.processedName());
   }
 }

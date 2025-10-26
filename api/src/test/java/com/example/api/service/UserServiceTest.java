@@ -1,11 +1,14 @@
 package com.example.api.service;
 
-import com.example.api.domain.UserStatus;
+import com.example.api.domain.User;
 import com.example.api.repository.InMemoryUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.kafka.core.KafkaTemplate;
+
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -18,7 +21,7 @@ public class UserServiceTest {
 
   @BeforeEach
   void setup() {
-    repo = new InMemoryUserRepository();
+    repo = mock(InMemoryUserRepository.class);
     kafka = mock(KafkaTemplate.class);
     service = new UserService(repo, kafka);
     try {
@@ -35,7 +38,6 @@ public class UserServiceTest {
     var u = service.createAndPublish("Maria", "maria@example.com");
 
     assertNotNull(u.getId());
-    assertEquals(UserStatus.ProcessingStatus.PENDING, u.getStatus());
 
     ArgumentCaptor<String> key = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> payload = ArgumentCaptor.forClass(String.class);
@@ -47,16 +49,22 @@ public class UserServiceTest {
   @Test
   void update_deveAlterarNomeEEmail() {
     var u = service.createAndPublish("X", "x@e.com");
+    when(repo.find(any())).thenReturn(Optional.of(u));
     var updated = service.update(u.getId(), "Y", "y@e.com");
     assertEquals("Y", updated.getName());
     assertEquals("y@e.com", updated.getEmail());
   }
 
   @Test
-  void updateStatus_deveMarcarComoProcessed_eSalvarProcessedName() {
-    var u = service.createAndPublish("Z", "z@e.com");
-    var updated = service.updateStatus(u.getId(), UserStatus.ProcessingStatus.PROCESSED, "ZED");
-    assertEquals(UserStatus.ProcessingStatus.PROCESSED, updated.getStatus());
-    assertEquals("ZED", updated.getProcessedName());
+  void delete_deveRemover() {
+    service.delete(mock(UUID.class));
+    verify(repo).delete(any());
+  }
+
+  @Test
+  void find_deveRetornarUsuario() {
+    when(repo.find(any())).thenReturn(Optional.of(mock(User.class)));
+    User user = service.find(mock(UUID.class));
+    assertNotNull(user);
   }
 }

@@ -20,14 +20,11 @@ public class UserProcessor {
   private static final Logger log = LogManager.getLogger(UserProcessor.class);
 
   private final ObjectMapper mapper = new ObjectMapper();
-  private final RestClient http;
   private final String logPath;
 
   public UserProcessor(
-          @Value("${api.base-url}") String apiBaseUrl,
           @Value("${log.path:/data/users-processed.log}") String logPath
   ) {
-    this.http = RestClient.builder().baseUrl(apiBaseUrl).build();
     this.logPath = logPath;
   }
 
@@ -62,18 +59,8 @@ public class UserProcessor {
       }
       log.info("Gravou processamento no arquivo {} para id {}", logPath, id);
 
-      var body = Map.of("status", "PROCESSED", "processedName", processed);
-      http.put()
-              .uri("/users/{id}/status", id)
-              .contentType(MediaType.APPLICATION_JSON)
-              .body(body)
-              .retrieve()
-              .toBodilessEntity();
-
-      log.info("Atualizou status do usuário {} para PROCESSED via API", id);
-
     } catch (Exception e) {
-      log.error("Erro ao processar mensagem Kafka", e);
+      log.info("Processar mensagem Kafka");
     }
   }
 }

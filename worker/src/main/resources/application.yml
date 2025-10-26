@@ -4,8 +4,5 @@ kafka:
 topics:
   user-register: users.register.v1
 
-api:
-  base-url: ${API_BASE_URL:http://localhost:8080/api}
-
 log:
   path: ${LOG_PATH:/data/users-processed.log}

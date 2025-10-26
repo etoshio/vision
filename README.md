@@ -34,4 +34,4 @@ curl -X PUT http://localhost:8080/api/users/{ID}   -H "Content-Type: application
 # Excluir
 curl -X DELETE http://localhost:8080/api/users/{ID}
 ```
-O **Worker** transforma o `name` para maiúsculas, faz append em `/data/users-processed.log` e chama `PUT /api/users/{id}/status` com `{"status":"PROCESSED","processedName":"<NOME>"}`.
+O **Worker** transforma o `name` para maiúsculas, faz append em `/data/users-processed.log`.

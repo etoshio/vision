@@ -1,7 +1,6 @@
 package com.example.api.service;
 
-import com.example.api.domain.UserStatus;
-import com.example.api.domain.UserStatus.ProcessingStatus;
+import com.example.api.domain.User;
 import com.example.api.repository.InMemoryUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
@@ -29,12 +28,11 @@ public class UserService {
     this.kafkaTemplate = kafkaTemplate;
   }
 
-  public UserStatus createAndPublish(String name, String email) {
-    var user = new UserStatus();
+  public User createAndPublish(String name, String email) {
+    var user = new User();
     user.setId(UUID.randomUUID());
     user.setName(name);
     user.setEmail(email);
-    user.setStatus(ProcessingStatus.PENDING);
     repository.save(user);
 
     try {
@@ -56,7 +54,7 @@ public class UserService {
     return user;
   }
 
-  public UserStatus update(UUID id, String name, String email) {
+  public User update(UUID id, String name, String email) {
     var u = repository.find(id).orElseThrow();
     if (name != null) u.setName(name);
     if (email != null) u.setEmail(email);
@@ -66,19 +64,9 @@ public class UserService {
     return u;
   }
 
-  public UserStatus updateStatus(UUID id, ProcessingStatus st, String processedName) {
+  public User find(UUID id) {
     var u = repository.find(id).orElseThrow();
-    u.setStatus(st);
-    if (processedName != null) u.setProcessedName(processedName);
-
-    repository.save(u);
-    log.info("Status do usuário {} atualizado para {} (processedName='{}')", id, st, processedName);
-    return u;
-  }
-
-  public UserStatus find(UUID id) {
-    var u = repository.find(id).orElseThrow();
-    log.debug("Consulta de usuário {} retornou status={}", id, u.getStatus());
+    log.debug("Consulta de usuário {}", id);
     return u;
   }
 

@@ -48,8 +48,7 @@ public class UserProcessorTest {
 
   @Test
   void onMessage_deveEscreverNoArquivo_eChamarAPI() throws Exception {
-    String apiBase = "http://localhost:" + port + "/api";
-    UserProcessor processor = new UserProcessor(apiBase, tempLog.toString());
+    UserProcessor processor = new UserProcessor(tempLog.toString());
 
     String json = "{\"id\":\"11111111-1111-1111-1111-111111111111\",\"name\":\"Maria\",\"email\":\"m@example.com\",\"createdAt\":\"2025-10-23T10:00:00Z\"}";
     processor.onMessage(json);
