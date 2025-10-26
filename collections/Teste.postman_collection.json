@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "5eaec178-d585-45c4-9ec7-cf8a459527ac",
+		"name": "Teste",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3196685"
+	},
+	"item": [
+		{
+			"name": "Consultar Por ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/:ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": "e27e4ca2-0038-4bab-b9e8-ca439824bb52"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Salvar Usuario",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Maria Silva111\",\"email\":\"maria@example.com\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

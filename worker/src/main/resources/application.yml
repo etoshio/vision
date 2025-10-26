@@ -1,0 +1,8 @@
+kafka:
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+
+topics:
+  user-register: users.register.v1
+
+log:
+  path: ${LOG_PATH:/data/users-processed.log}
